@@ -157,7 +157,7 @@ public class VeiCad extends javax.swing.JDialog {
             PreparedStatement stmt = VeiSQL.connection.prepareStatement(sql);
             
             stmt.setString(1, jtfDescr.getText()            );
-            stmt.setDouble(2, Double.parseDouble(jlChassi.getText()) );
+            stmt.setDouble(2, Double.parseDouble(jtfChassi.getText()) );
             stmt.setInt   (3, Integer.parseInt(jlCodigo.getText())             );
 
             int result = stmt.executeUpdate();

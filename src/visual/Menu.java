@@ -8,6 +8,8 @@ public class Menu extends javax.swing.JFrame {
 
     public ProNaveg pronaveg;
     public VeiNaveg veinaveg;
+    public MulNaveg mulnaveg;
+    
     private GestorNavegadores GN;
     private JDesktopPane desktop = new JDesktopPane();
 
@@ -29,6 +31,7 @@ public class Menu extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jmProNaveg = new javax.swing.JMenuItem();
         jmVeiNaveg = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jmSair = new javax.swing.JMenuItem();
 
@@ -54,6 +57,14 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         jMenu1.add(jmVeiNaveg);
+
+        jMenuItem1.setText("Multa");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
         jMenu1.add(jSeparator1);
 
         jmSair.setText("Sair");
@@ -109,6 +120,13 @@ public class Menu extends javax.swing.JFrame {
         GN.GestorVei( veinaveg );
     }//GEN-LAST:event_jmVeiNavegActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        mulnaveg = new MulNaveg(this);
+        desktop.add(mulnaveg);
+        desktop.setOpaque(false);
+        mulnaveg.moveToFront();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -120,6 +138,7 @@ public class Menu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuItem jmProNaveg;
     private javax.swing.JMenuItem jmSair;
