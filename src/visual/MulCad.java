@@ -4,10 +4,19 @@
  */
 package visual;
 
+import java.awt.List;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import modelo.Multa;
 import modelo.MySQL;
 import modelo.Proprietarios;
 import modelo.Veiculos;
@@ -21,22 +30,56 @@ public class MulCad extends javax.swing.JDialog {
     /**
      * Creates new form MulCad
      */
-    private MySQL sql;
+    private MySQL sql = new MySQL("MULTA");
     private javax.swing.JFrame pFrame;
-    private Proprietarios prop;
-    private Veiculos vei;
-    private javax.swing.JFrame parentFrame;
+    private JDialog pDialog;
+    private Proprietarios prop = new Proprietarios();
+    private Veiculos vei = new Veiculos();
+    private Multa mul = new Multa();
     
     public MulCad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+       
+        pFrame = (JFrame)parent;
+        pegaTipoMulta();
     }
     public MulCad(javax.swing.JFrame parentFrame, MySQL SQL) {
         
         initComponents();
 
-        this.parentFrame = parentFrame;
+        this.pFrame = parentFrame;
         this.sql      = SQL;
+        
+        pegaTipoMulta();
+    }
+
+    public MulCad(javax.swing.JDialog parentDialog, MySQL SQL) {
+        
+        initComponents();
+
+        this.pDialog = parentDialog;
+        this.sql      = SQL;
+        
+        pegaTipoMulta();
+        
+    }
+    
+    private void pegaTipoMulta() {
+        jcGrauInfracao.removeAllItems();
+        
+        for ( int i=0; i < mul.getTamanho(); i ++ ) {
+            jcGrauInfracao.addItem(mul.getNomeValor(i));
+        }
+    }
+    
+    private void propInlcui( ) {
+        if ( prop.getCodigo() != -1 ) {
+            jtNomeProp.setText(prop.getNome());
+        }
+        if ( vei.getCodigo() != -1 ) {
+            jtNomeVeiculo.setText(vei.getDescr());        
+        }
     }
 
     /**
@@ -64,6 +107,16 @@ public class MulCad extends javax.swing.JDialog {
         jbTabelaVei = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                formFocusGained(evt);
+            }
+        });
 
         jLabel1.setText("Proprietário");
 
@@ -74,6 +127,10 @@ public class MulCad extends javax.swing.JDialog {
         jLabel4.setText("Pontuação");
 
         jLabel5.setText("Grau da Infração");
+
+        jtNomeProp.setEditable(false);
+
+        jtNomeVeiculo.setEditable(false);
 
         jtData.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/mm/yyyy"))));
         jtData.addActionListener(new java.awt.event.ActionListener() {
@@ -192,16 +249,20 @@ public class MulCad extends javax.swing.JDialog {
     private void jbOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbOkActionPerformed
         try {
             sql.abrebanco();
-            String sqlLinha = "Insert INTO Multa (codpro,codvei,data,pontuacao,tipo"
+            String sqlLinha = "Insert INTO Multa (codpro,codvei,data,pontuacao,tipo)"
                             + "VALUES (?,?,?,?,?)";
             
             PreparedStatement stmt = sql.connection.prepareStatement(sqlLinha);
             
-            stmt.setInt( 1, prop.getCodigo());
-            stmt.setInt( 2, vei.getCodigo());
-            stmt.setDate(3, Date.valueOf(jtData.getText()));
-            stmt.setInt( 4, Integer.parseInt(jtPontuacao.getText()));
-            stmt.setInt( 5, jcGrauInfracao.getItemCount());
+            stmt.setInt   ( 1, prop.getCodigo());
+            stmt.setInt   ( 2, vei.getCodigo());
+            try {
+                stmt.setDate  ( 3,new java.sql.Date(new SimpleDateFormat("dd/mm/yyyy").parse(jtData.getText()).getTime()));
+            } catch (ParseException ex) {
+                Logger.getLogger(MulCad.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            stmt.setInt   ( 4, Integer.parseInt(jtPontuacao.getText()));
+            stmt.setInt   ( 5, jcGrauInfracao.getSelectedIndex()+1);
             
             int result = stmt.executeUpdate();
             if ( result != 1 ) {
@@ -215,20 +276,34 @@ public class MulCad extends javax.swing.JDialog {
     }//GEN-LAST:event_jbOkActionPerformed
 
     private void jbTabelaPropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbTabelaPropActionPerformed
+        this.setVisible(false);
+        
         ProNaveg pn = new ProNaveg(this, prop);
         pFrame.getContentPane().add(pn);
         pFrame.repaint();
+        
         pn.moveToFront();
+        jtNomeProp.requestFocus();
     }//GEN-LAST:event_jbTabelaPropActionPerformed
 
     private void jbTabelaVeiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbTabelaVeiActionPerformed
-        VeiNaveg vn = new VeiNaveg(pFrame);
+        this.setVisible(false);
         
+        VeiNaveg vn = new VeiNaveg(vei, this);
         pFrame.getContentPane().add(vn);
         pFrame.repaint();
         
         vn.moveToFront();
+        jtNomeVeiculo.requestFocus();
     }//GEN-LAST:event_jbTabelaVeiActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        propInlcui();
+    }//GEN-LAST:event_formWindowActivated
+
+    private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
+        this.setVisible(true);
+    }//GEN-LAST:event_formFocusGained
 
     /**
      * @param args the command line arguments

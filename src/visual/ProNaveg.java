@@ -250,15 +250,16 @@ public class ProNaveg extends javax.swing.JInternalFrame {
 
           String strcod = ( ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),0)) );
           Proprietario.setCodigo( Integer.parseInt(strcod) );
-          Proprietario.setNome( ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),1)) );
+          
+          Proprietario.setNome(       ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),1)) );
           Proprietario.setIdentidade( ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),2)) );
-          Proprietario.setEndereco( ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),3)) );
-          Proprietario.setNumero( ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),4)) );
-          Proprietario.setCep( ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),5)) );
-          Proprietario.setBairro( ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),6)) );
-          Proprietario.setCidade( ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),7)) );
-          Proprietario.setTelefone( ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),8)) );
-          Proprietario.setEmail( ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),9)) );
+          Proprietario.setEndereco(   ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),3)) );
+          Proprietario.setNumero(     ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),4)) );
+          Proprietario.setCep(        ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),5)) );
+          Proprietario.setBairro(     ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),6)) );
+          Proprietario.setCidade(     ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),7)) );
+          Proprietario.setTelefone(   ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),8)) );
+          Proprietario.setEmail(      ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),9)) );
 
           this.dispose();
 

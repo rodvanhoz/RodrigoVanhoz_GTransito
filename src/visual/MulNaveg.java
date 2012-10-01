@@ -56,7 +56,7 @@ public class MulNaveg extends javax.swing.JInternalFrame {
         SQL.abrebanco();
 
         Navegador();
-        //Atualiza();
+        Atualiza();
         
     }
 
@@ -87,11 +87,12 @@ public class MulNaveg extends javax.swing.JInternalFrame {
         LimpaNavegador();
         
         String strsql;
-        strsql =           "SELECT pro.nome as nome, pro.codigo as codigo";
-        strsql = strsql +  "vei.descr as descr, vei.codpro as codpro, vei.codvei as codvei";
-        strsql = strsql +  "mul.data as data, amul.pontuacao os pontuacao, mul.tipo as tipo";
-        strsql = strsql +  "FROM MULTA mul, PROPRIETARIO pro, VEICULO logr WHERE pro.codigo = mul.codpro";
-        strsql = strsql +  "AND vei.codpro = mul.codvei";
+        strsql =           "SELECT pro.nome as nome, pro.codigo as codigo,";
+        strsql = strsql +  "vei.descr as descr, vei.codpro as codpro,";
+        strsql = strsql +  "mul.data as data, mul.pontuacao as pontuacao, mul.tipo as tipo,";
+        strsql = strsql +  "mul.codpro as codpro, mul.codvei as codvei ";
+        strsql = strsql +  "FROM MULTA mul, PROPRIETARIO pro, VEICULO vei ";
+        strsql = strsql +  "WHERE pro.codigo = mul.codpro AND vei.codigo = mul.codvei";
 
         RS = SQL.consultar( strsql );
         try {
@@ -99,18 +100,11 @@ public class MulNaveg extends javax.swing.JInternalFrame {
           RS.first();
           do {            
             MODEL.insertRow(i,new Object[] {
-              Integer.toString(RS.getInt   ("codigo")),
-                               RS.getString("nome"),
-                               RS.getString("identidade"),
-                               RS.getString("endereco"),
-                               RS.getString("numero"),
-                               RS.getString("cep"),
-                               RS.getString("bairro"),
-                               RS.getString("cidade"),
-                               RS.getString("telefone"),
-                               RS.getString("email"),
-
-
+              RS.getString("nome"),
+              RS.getString("descr"),
+              RS.getDate("data"),
+              RS.getInt("pontuacao"),
+              RS.getString("tipo")
             });
             i+=1;
           } while ( RS.next() );
@@ -198,7 +192,7 @@ public class MulNaveg extends javax.swing.JInternalFrame {
                     .addComponent(jbtnIncluir)
                     .addComponent(jbtnExcluir))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE))
         );
 
         pack();
@@ -222,7 +216,9 @@ public class MulNaveg extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jbtnExcluirActionPerformed
 
     private void jtNavegadorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtNavegadorMouseClicked
-        this.dispose();
+        if ( evt.getClickCount() == 2 ) {
+            this.dispose();
+        }
     }//GEN-LAST:event_jtNavegadorMouseClicked
 
     private void jbtnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnIncluirActionPerformed

@@ -9,8 +9,9 @@ public class VeiNaveg extends javax.swing.JInternalFrame {
 
     private ResultSet RS;
     private DefaultTableModel MODEL;
-    private Veiculos vei;
-    JFrame parentFrame;
+    private Veiculos vei = new Veiculos();
+    JFrame  parentFrame;
+    JDialog parentDialog;
 
     public MySQL VeiSQL = new MySQL("VEICULO");
 
@@ -46,13 +47,26 @@ public class VeiNaveg extends javax.swing.JInternalFrame {
         Atualiza();
     }
     
+    public VeiNaveg(Veiculos vei, JDialog parentDialog) {
+        initComponents();
+        setSize(800,600);
+        setVisible(true);
+
+        VeiSQL.abrebanco();
+        
+        this.parentDialog = parentDialog;
+        this.vei = vei;
+
+        Navegador();
+        Atualiza();
+    }
     
 
     private void Navegador(){
 
       RS    = VeiSQL.consultar();
 
-      MODEL = new DefaultTableModel(new String[]{ "Código", "Descrição", "Chassi" },VeiSQL.tamanho()) {
+      MODEL = new DefaultTableModel(new String[]{ "Código", "Descrição", "Chassi", "Proprietario" },VeiSQL.tamanho()) {
            public boolean isCellEditable(int rowIndex, int mColIndex) {
                 return false;
            }
@@ -73,7 +87,13 @@ public class VeiNaveg extends javax.swing.JInternalFrame {
 
       if (VeiSQL.tamanho() != 0) {
 
-        RS = VeiSQL.consultar();
+        String linhaSQL = "SELECT pro.nome as nome, pro.codigo as codpro," +
+                          "vei.descr as descr, vei.codpro as codpro," +
+                          "vei.chassi as chassi, vei.codigo as codvei " +
+                          "FROM PROPRIETARIO pro, VEICULO vei " +
+                          "WHERE pro.codigo = vei.codpro";
+        
+        RS = VeiSQL.consultar(linhaSQL);
         try {
 
           LimpaNavegador();
@@ -83,9 +103,10 @@ public class VeiNaveg extends javax.swing.JInternalFrame {
           RS.first();
           do {
             MODEL.insertRow(i,new Object[] {
-              Integer.toString(RS.getInt   ("codigo")),
+              Integer.toString(RS.getInt   ("codvei")),
                                RS.getString("descr"  ),
-              Double.toString( RS.getDouble("Chassi"))});
+              Double.toString (RS.getDouble("Chassi")),
+                               RS.getString("nome")});
             i+=1;
           } while ( RS.next() );        
         }
@@ -109,6 +130,23 @@ public class VeiNaveg extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setResizable(true);
         setTitle("Veículos");
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameClosed(evt);
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+        });
 
         jbtnIncluir.setText("Incluir");
         jbtnIncluir.addActionListener(new java.awt.event.ActionListener() {
@@ -161,7 +199,7 @@ public class VeiNaveg extends javax.swing.JInternalFrame {
                     .addComponent(jbtnIncluir)
                     .addComponent(jbtnExcluir))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE))
         );
 
         pack();
@@ -200,12 +238,19 @@ public class VeiNaveg extends javax.swing.JInternalFrame {
             
             vei.setCodigo(Integer.parseInt(criaRow));
             vei.setDescr   ((String) jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(), 1));
-            vei.setChassi  ((Double) jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(), 2));
+            
+            criaRow = ((String) jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(), 2) );
+            vei.setChassi  (Double.parseDouble(criaRow));
+            
             vei.setNomeProp((String) jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(), 3));
             
             this.dispose();
         }
     }//GEN-LAST:event_jtNavegadorMouseClicked
+
+    private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosed
+       parentDialog.setVisible(true);
+    }//GEN-LAST:event_formInternalFrameClosed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
