@@ -11,14 +11,24 @@ package modelo;
 public class Veiculos {
     private int codigo;
     private String descr;
-    private double chassi;
+    private String chassi;
     private String nomeProp;
+    private String placa;
 
     public Veiculos() {
         codigo = -1;
         descr = null;
-        chassi = 0;
+        chassi = null;
         nomeProp = null;
+        placa = null;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
     }
 
     public int getCodigo() {
@@ -37,11 +47,11 @@ public class Veiculos {
         this.descr = descr;
     }
 
-    public double getChassi() {
+    public String getChassi() {
         return chassi;
     }
 
-    public void setChassi(double chassi) {
+    public void setChassi(String chassi) {
         this.chassi = chassi;
     }
 

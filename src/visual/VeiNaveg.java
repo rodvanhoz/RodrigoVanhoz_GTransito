@@ -66,7 +66,7 @@ public class VeiNaveg extends javax.swing.JInternalFrame {
 
       RS    = VeiSQL.consultar();
 
-      MODEL = new DefaultTableModel(new String[]{ "Código", "Descrição", "Chassi", "Proprietario" },VeiSQL.tamanho()) {
+      MODEL = new DefaultTableModel(new String[]{ "Código", "Descrição", "Chassi", "Placa", "Proprietario" },VeiSQL.tamanho()) {
            public boolean isCellEditable(int rowIndex, int mColIndex) {
                 return false;
            }
@@ -89,7 +89,8 @@ public class VeiNaveg extends javax.swing.JInternalFrame {
 
         String linhaSQL = "SELECT pro.nome as nome, pro.codigo as codpro," +
                           "vei.descr as descr, vei.codpro as codpro," +
-                          "vei.chassi as chassi, vei.codigo as codvei " +
+                          "vei.chassi as chassi, vei.codigo as codvei, " +
+                          "vei.placa as placa " +
                           "FROM PROPRIETARIO pro, VEICULO vei " +
                           "WHERE pro.codigo = vei.codpro";
         
@@ -105,7 +106,8 @@ public class VeiNaveg extends javax.swing.JInternalFrame {
             MODEL.insertRow(i,new Object[] {
               Integer.toString(RS.getInt   ("codvei")),
                                RS.getString("descr"  ),
-              Double.toString (RS.getDouble("Chassi")),
+                               RS.getString("Chassi"),
+                               RS.getString("placa"),
                                RS.getString("nome")});
             i+=1;
           } while ( RS.next() );        
@@ -239,10 +241,12 @@ public class VeiNaveg extends javax.swing.JInternalFrame {
             vei.setCodigo(Integer.parseInt(criaRow));
             vei.setDescr   ((String) jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(), 1));
             
-            criaRow = ((String) jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(), 2) );
-            vei.setChassi  (Double.parseDouble(criaRow));
+            vei.setPlaca   ((String) jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(), 2));
             
-            vei.setNomeProp((String) jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(), 3));
+            vei.setChassi  ((String) jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(), 3) );
+            //vei.setChassi  (Double.parseDouble(criaRow));
+            
+            vei.setNomeProp((String) jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(), 4));
             
             this.dispose();
         }

@@ -49,6 +49,8 @@ public class VeiCad extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jlEmail = new javax.swing.JLabel();
         jlCodigo = new javax.swing.JLabel();
+        jtPlaca = new javax.swing.JTextField();
+        jPlaca = new javax.swing.JLabel();
 
         jToggleButton1.setText("jToggleButton1");
 
@@ -88,6 +90,8 @@ public class VeiCad extends javax.swing.JDialog {
             }
         });
 
+        jPlaca.setText("Placa");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,15 +109,21 @@ public class VeiCad extends javax.swing.JDialog {
                                 .addComponent(jlNome)
                                 .addComponent(jtfDescr, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
                                 .addComponent(jlChassi, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jtfChassi)
-                                .addComponent(jtfProp))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jtfChassi))
+                            .addGap(33, 33, 33))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jlProp)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGap(80, 80, 80)
                             .addComponent(jlCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jlEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(80, 80, 80)
+                        .addComponent(jlEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jtfProp, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPlaca)
+                    .addComponent(jlProp))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -128,16 +138,20 @@ public class VeiCad extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jtfChassi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jlProp)
-                    .addComponent(jlCodigo))
+                .addComponent(jlCodigo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtfProp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addGap(18, 18, 18)
-                .addComponent(jlEmail)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addComponent(jPlaca)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jlEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addComponent(jlProp)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(jtfProp, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jBTconfirma)
                     .addComponent(btnCancelar))
@@ -152,13 +166,14 @@ public class VeiCad extends javax.swing.JDialog {
         try {
 
             VeiSQL.abrebanco();
-            String sql = "INSERT INTO veiculo (descr,chassi,codpro) VALUES (?,?,?)";
+            String sql = "INSERT INTO veiculo (descr,chassi,placa,codpro) VALUES (?,?,?,?)";
 
             PreparedStatement stmt = VeiSQL.connection.prepareStatement(sql);
             
             stmt.setString(1, jtfDescr.getText()            );
-            stmt.setDouble(2, Double.parseDouble(jtfChassi.getText()) );
-            stmt.setInt   (3, Integer.parseInt(jlCodigo.getText())             );
+            stmt.setString(2, jtfChassi.getText());
+            stmt.setString(3, jtPlaca.getText());
+            stmt.setInt   (4, Integer.parseInt(jlCodigo.getText())             );
 
             int result = stmt.executeUpdate();
             String mens;
@@ -214,12 +229,14 @@ public class VeiCad extends javax.swing.JDialog {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton jBTconfirma;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jPlaca;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JLabel jlChassi;
     private javax.swing.JLabel jlCodigo;
     private javax.swing.JLabel jlEmail;
     private javax.swing.JLabel jlNome;
     private javax.swing.JLabel jlProp;
+    private javax.swing.JTextField jtPlaca;
     private javax.swing.JTextField jtfChassi;
     private javax.swing.JTextField jtfDescr;
     private javax.swing.JTextField jtfProp;

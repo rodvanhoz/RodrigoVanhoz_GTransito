@@ -55,11 +55,10 @@ public class MulCad extends javax.swing.JDialog {
     }
 
     public MulCad(javax.swing.JDialog parentDialog, MySQL SQL) {
-        
         initComponents();
 
         this.pDialog = parentDialog;
-        this.sql      = SQL;
+        this.sql = SQL;
         
         pegaTipoMulta();
         

@@ -61,7 +61,7 @@ public class MulNaveg extends javax.swing.JInternalFrame {
     }
 
     private void Navegador() {
-      MODEL = new DefaultTableModel(new String[]{ "Nome Proprietário","Desc. Veículo","Data","Pontuação","Grau Infração" },SQL.tamanho()) {
+      MODEL = new DefaultTableModel(new String[]{ "Id Multa","Id Prop.", "Nome Proprietário","Id Veiculo","Veículo","Data","Pontuação","Grau Infração" },SQL.tamanho()) {
            public boolean isCellEditable(int rowIndex, int mColIndex) {
                 return false;
             }
@@ -69,12 +69,14 @@ public class MulNaveg extends javax.swing.JInternalFrame {
       jtNavegador.setModel(MODEL);
       jtNavegador.setShowGrid(false);
 
-      //jtNavegador.getColumnModel().getColumn(0).setMaxWidth(90);  // código
-      jtNavegador.getColumnModel().getColumn(0).setMaxWidth(400); // nome prop.
-      jtNavegador.getColumnModel().getColumn(1).setMaxWidth(400); // desc. vei.
-      jtNavegador.getColumnModel().getColumn(2).setMaxWidth(180); // data
-      jtNavegador.getColumnModel().getColumn(3).setMaxWidth(120); // pontuação
-      jtNavegador.getColumnModel().getColumn(4).setMaxWidth(180); // grau inf.
+      jtNavegador.getColumnModel().getColumn(0).setMaxWidth(90);  // código
+      jtNavegador.getColumnModel().getColumn(1).setMaxWidth(90);  // código Prop
+      jtNavegador.getColumnModel().getColumn(2).setMaxWidth(400); // nome prop.
+      jtNavegador.getColumnModel().getColumn(3).setMaxWidth(90);  // código veiculo
+      jtNavegador.getColumnModel().getColumn(4).setMaxWidth(400); // desc. vei.
+      jtNavegador.getColumnModel().getColumn(5).setMaxWidth(180); // data
+      jtNavegador.getColumnModel().getColumn(6).setMaxWidth(120); // pontuação
+      jtNavegador.getColumnModel().getColumn(7).setMaxWidth(180); // grau inf.
       
     }
 
@@ -90,7 +92,7 @@ public class MulNaveg extends javax.swing.JInternalFrame {
         strsql =           "SELECT pro.nome as nome, pro.codigo as codigo,";
         strsql = strsql +  "vei.descr as descr, vei.codpro as codpro,";
         strsql = strsql +  "mul.data as data, mul.pontuacao as pontuacao, mul.tipo as tipo,";
-        strsql = strsql +  "mul.codpro as codpro, mul.codvei as codvei ";
+        strsql = strsql +  "mul.codvei as codvei, mul.codpro as codpro, mul.codigo as codmul ";
         strsql = strsql +  "FROM MULTA mul, PROPRIETARIO pro, VEICULO vei ";
         strsql = strsql +  "WHERE pro.codigo = mul.codpro AND vei.codigo = mul.codvei";
 
@@ -100,7 +102,10 @@ public class MulNaveg extends javax.swing.JInternalFrame {
           RS.first();
           do {            
             MODEL.insertRow(i,new Object[] {
+              RS.getInt("codmul"),
+              RS.getInt("codpro"),
               RS.getString("nome"),
+              RS.getInt("codvei"),
               RS.getString("descr"),
               RS.getDate("data"),
               RS.getInt("pontuacao"),
@@ -202,12 +207,11 @@ public class MulNaveg extends javax.swing.JInternalFrame {
         try {
             String sql = "DELETE FROM MULTA WHERE CODIGO=?";
             PreparedStatement stmt = SQL.connection.prepareStatement(sql);
-            String strcod = ((String)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),0));
-            stmt.setString(1, strcod);
+            stmt.setInt(1, (Integer)jtNavegador.getModel().getValueAt(jtNavegador.getSelectedRow(),0));
             int result = stmt.executeUpdate();
             String mens;
             if (result != 1) {
-                mens = "Proprietario não cadastrado!";
+                mens = "Multa não cadastrado!";
                 JOptionPane.showMessageDialog(null, mens);
             } else ((DefaultTableModel)jtNavegador.getModel()).removeRow(jtNavegador.getSelectedRow());
         } catch (Exception exception){
@@ -226,7 +230,7 @@ public class MulNaveg extends javax.swing.JInternalFrame {
         mul_gui.setTitle("Cadastro de Multas");
         mul_gui.setAlwaysOnTop(true);
         mul_gui.pack();
-        mul_gui.show();
+        mul_gui.show(true);
         Atualiza();
     }//GEN-LAST:event_jbtnIncluirActionPerformed
 
